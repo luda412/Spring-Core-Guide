@@ -2,14 +2,14 @@
 
 ## HTTP GET 메서드 구현
 
-- GET API는 웹 애플리 케이션 서버에서 값을 가져올 떄 사용하는 API로 요청에 대한 처리 방법을 아래와 같이 구분한다.
+- GET API는 웹 애플리케이션 서버에서 값을 가져올 떄 사용하는 API로 요청에 대한 처리 방법을 아래와 같이 구분한다.
 
 ### PathVariable 활용
 
 -  URL에 `{}`를 활용하여 값을 받아 요청하는 방법으로 값을 간단히 전달 할 때 주로 사용하는 방법
 -  매개 변수와 그 값을 연결하기 위해 Controller에 `@PathVariable` 어노테이션을 명시하고, 변수의 이름과 요청 URL의 변수의 이름을 동일하게 한다.
 
-### RequestParam 활요
+### RequestParam 활용
 
 - URL 경로에 쿼리 형식으로 값을 전달하는 방식으로 `?`를 기준으로 Key-Value 형식으로 구성된 전송 방식이다.
 - Controller에 `@RequestParam`을 명시하여 쿼리 값과 매핑하여 사용한다.
@@ -21,3 +21,14 @@
 
 - 다른 레이어 간의 데이터 교환에 활용하며 요청을 받고자 하는 형식 혹은 값을 미리 정하여 요청할 값을 명시하는 형태로 DTO를 사용한다.
 - DTO 패키지를 선언하고, DTO 클래스에는 Lombok을 활용하여 `Getter`와 `Setter`를 간편화할 수 있다.
+
+## HTTP POST 메서드 구현
+
+- POST API는 웹 애플리케이션을 통해 데이터베이스 등의 저장소에 리소를 저장할 때 사용된다.
+- HTTP Body에 JSON 형식의 값ㅇ르 담아 전달하면 된다.
+
+### RequestBody 활용
+
+- 클라이언트의 요청에 트래픽 값이 포함 되어 있으며 리소스르 HTTP Body에 담아 전송한다.
+- `@RequestMapping` 대신 `@PostMapping`을 사용하면 Method 요소를 정의하지 않아도 된다.
+- `@RequestBody` 어노테이션을 매개변수로 정의하면 HTTP Body 내용을 지정된 객체에 매핑하는 역할을 한다.
