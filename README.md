@@ -22,6 +22,8 @@
 - 다른 레이어 간의 데이터 교환에 활용하며 요청을 받고자 하는 형식 혹은 값을 미리 정하여 요청할 값을 명시하는 형태로 DTO를 사용한다.
 - DTO 패키지를 선언하고, DTO 클래스에는 Lombok을 활용하여 `Getter`와 `Setter`를 간편화할 수 있다.
 
+----
+
 ## HTTP POST 메서드 구현
 
 - POST API는 웹 애플리케이션을 통해 데이터베이스 등의 저장소에 리소를 저장할 때 사용된다.
@@ -32,3 +34,24 @@
 - 클라이언트의 요청에 트래픽 값이 포함 되어 있으며 리소스르 HTTP Body에 담아 전송한다.
 - `@RequestMapping` 대신 `@PostMapping`을 사용하면 Method 요소를 정의하지 않아도 된다.
 - `@RequestBody` 어노테이션을 매개변수로 정의하면 HTTP Body 내용을 지정된 객체에 매핑하는 역할을 한다.
+
+----
+
+## HTTP PUT 메서드 구현
+
+- 웹 애플리케이션 서버를 통해 데이터베이스 같은 저장소에 존재하는 리소스 값을 업데이트하는 데 사용한다.
+- HTTP Body를 이용한 통신 방법을 사용한다.
+
+### RequestBody 활용
+
+- 어떤 값이 들어올지 모르는 경우에 Map 객체를 활용해 값을 받을 수도 있지만, 대부분의 경우 API를 개발한 쪽에서 작성한 명세를 작성한다.
+
+### DTO 객체를 활용 (DTO Type 선언)
+
+- DTO 객체 Type으로 메서드를 선언하여 응답을 반환하는 경우 결과 값이 JSON 형식으로 정렬되어 출력된다.
+- 또한, Headers의 Content-Type도 application/json 형식으로 반환된다.
+
+### ResponseEntity를 활용한 PUT 메서드 구현
+
+- HttpEntity 클래스를 활용하여 Headers와 Body로 구성된 Http 요청과 응답을 구성하는 역할을 할 수 있다.
+- ResponseEntity는 서버에 들어온 요청에 대해 응답 데이터를 구성해 전달할 수 있으며, Http Status를 활용할 수 있다.
