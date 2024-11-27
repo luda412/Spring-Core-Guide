@@ -1,6 +1,10 @@
 package com.springcoreguide.hello.controller;
 
 import com.springcoreguide.hello.dto.MemberDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -23,11 +27,21 @@ public class GetController {
         return var;
     }
 
+    @Operation(
+            summary = "GET 메서드 예제",
+            description = "@RequestParam을 활용한 GET Method",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "text/plain")),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                    @ApiResponse(responseCode = "500", description = "서버 에러")
+            }
+    )
     @GetMapping(value = "/request1")
     public String getRequestParam1(
-            @RequestParam String name,
-            @RequestParam String email,
-            @RequestParam String organization
+
+            @Parameter(description = "이름", required = true, example = "leeluda" ) @RequestParam String name,
+            @Parameter(description = "이메일", required = true, example = "naver.com" ) @RequestParam String email,
+            @Parameter(description = "회사", required = true, example = "student" ) @RequestParam String organization
     ){
         return name +" " + email + " "+ organization;
     }
