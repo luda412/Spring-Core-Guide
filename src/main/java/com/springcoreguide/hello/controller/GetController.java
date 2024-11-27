@@ -1,6 +1,12 @@
 package com.springcoreguide.hello.controller;
 
 import com.springcoreguide.hello.dto.MemberDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -8,13 +14,16 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/get-api")
 public class GetController {
+    private final Logger LOGGER = LoggerFactory.getLogger((GetController.class));
     @GetMapping(value = "/name")
     public String getHello(){
+        LOGGER.info("getHello 메서드 호출");
         return "Flature";
     }
 
     @GetMapping(value = "/variable1/{variable}")
     public String getVariable1(@PathVariable String variable){
+        LOGGER.info("@PathVariable을 통해 들어온 값: {}", variable);
         return variable;
     }
 
@@ -23,11 +32,21 @@ public class GetController {
         return var;
     }
 
+    @Operation(
+            summary = "GET 메서드 예제",
+            description = "@RequestParam을 활용한 GET Method",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "text/plain")),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                    @ApiResponse(responseCode = "500", description = "서버 에러")
+            }
+    )
     @GetMapping(value = "/request1")
     public String getRequestParam1(
-            @RequestParam String name,
-            @RequestParam String email,
-            @RequestParam String organization
+
+            @Parameter(description = "이름", required = true, example = "leeluda" ) @RequestParam String name,
+            @Parameter(description = "이메일", required = true, example = "naver.com" ) @RequestParam String email,
+            @Parameter(description = "회사", required = true, example = "student" ) @RequestParam String organization
     ){
         return name +" " + email + " "+ organization;
     }
