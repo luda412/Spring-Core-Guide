@@ -71,3 +71,61 @@
 ### RequestParam 활용
 
 - 쿼리스트링을 통해서 값을 받을 수도 있다.
+
+## Swagger 설정 (REST API 명세)
+
+- API가 어떤 로직을 수행하는지 설명하고, 어떠 값을 요청하며, 어떤 응답 값을 반환하는지 정리한 자료로써 활용된다.
+
+### 의존성 추가 - springdoc - openapi
+
+- Spring Boot Version 3.x 에는 springfox 의존성이 충돌하여 springdoc-openapi를 사용
+- `implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'`
+
+### @Operation 어노테이션
+
+- summary 옵션: API에 대한 설명
+- description 옵션: API에 대한 요약
+- response 옵션: 응답 코드 예제
+
+### @Parameter 어노테이션
+
+- required 옵션: @RequestParam이나 @PathVariable에 사용 가능하며, 필수 여부를 나타낸다.
+- example 옵션: 어떤 값을 어떻게 작성하면 되는지 간략한 설명
+
+### @Content 어노테이션
+
+- 응답의 미디어 타입 및 상세 정보를 정의한다.
+
+## Logback 설정
+
+- 시스템의 상태나 동작 정보를 시간순으로 기록하기 위해 Logback을 사용한다.
+- slf4j 이후는 `spring-boot-starter-web`에 내장되어 있어 별도의 의존성을 추가 하지 않아도 된다.
+
+### Logback 특징
+
+- 5개의 로그 레벨 설정이 가능하다.
+  - ERROR: 로직 수행 중에 시스템에 심각한 문제가 발생해서 애플리케이션의 작동이 불가능한 경우
+  - WARN: 시스템 에러의 원인이 될 수 있는 경고 레벨을 의미한다.
+  - INFO: 애클리케이션의 상태 변경과 같은 정보 전달을 위해 사용한다.
+  - DEBUG: 애플리케이션의 디버깅을 위한 메시지를 표시하기 위한 레벨을 의미한다.
+  - TRACE: DEBUG 보다 더 상세한 메시지를 표현하기 위한 레벨을 의미한다.
+- 실제 운영 환경과 개발 환경에서 각각 다른 출력 레벨을 설정해서 로그 확인 가능.
+
+### Logback 설정
+
+- application yml에 `logging.level.root: info` 설정
+- 파일로 출력 시 `logging.file.name` & `path` 설정
+- 형식을 설정 시 `logginf.pattern.console` & `path` 설정
+
+### Logback 적용
+
+- Logger 객체 활용 시 `private final Logger LOGGER = LoggerFactory.getLogger((GetController.class));`로 설정하고, `LOGGER.info(...)`로 사용할 수 있지만, 아래와 같이 어노테이션 명시로도 사용가능하다.
+- `@Slf4j` 어노테이션을 명시하고 `log.info(...)`와 같이 사용한다.
+- 컨트롤러에 들어오는 값을 직접 logger로 확인할 때는 변수 값을 명시하여 사용한다.
+```java
+  @GetMapping(value = "/variable1/{variable}")
+  public String getVariable1(@PathVariable String variable){
+  LOGGER.info("@PathVariable을 통해 들어온 값: {}", variable);
+  return variable;
+  }
+  ```
