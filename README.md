@@ -167,4 +167,27 @@
 
 ----
 
-## 
+## Persistence Context
+
+- 애플리케이션과 데이터베이스 사이에서 Entity와 레코드의 괴리를 해소하는 기능과 객체를 보관하는 기능을 수행한다.
+- Entity 객체가 영속성 켄텍스트에 들어오면 JPA는 Eitity 객체의 매핑 정보를 데이터베이스에 반영하는 작업을 수행한다.
+- 생명주기는 세션 단위
+
+### Entity Manager
+
+- Entity를 관리하는 객체
+- 데이터베이스에 접근해서 CRUD 작업을 수행한다.
+
+### Entity Manager Factory
+
+- Entity Manager를 만드는 주체
+- 생성된 Entity Manager는 Entity를 영속성 컨텍스트에 추가해서 영속 객체로 만드는 작업을 수행하고, 영속성 컨텍스트와 데이터베이스를 비교하면서 실제 데이터베이스를 대상으로 작업을 수행한다.
+
+#### Entity의 생명주기
+
+- 비영속성 - New
+- 영속 - Managed
+- 준영속성 - Detached
+- 삭제 - Removed
+
+----
