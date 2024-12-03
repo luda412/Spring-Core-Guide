@@ -191,3 +191,9 @@
 - 삭제 - Removed
 
 ----
+
+## Repository Interface 설계
+
+- Spring Data JPA는 JpaRepository를 기반으로 더욱 쉽게 데이터베이스를 사용할 수 있는 아키텍처를 제공한다.
+- Entity를 데이터베이스의 테이블과 구조를 생성하는 데 사용했다면 Repository는 Entity가 생성한 데이터베이스에 접근하는 데 사용
+- 
