@@ -191,3 +191,83 @@
 - 삭제 - Removed
 
 ----
+
+## Repository Interface 설계
+
+- Spring Data JPA는 JpaRepository를 기반으로 더욱 쉽게 데이터베이스를 사용할 수 있는 아키텍처를 제공한다.
+- Entity를 데이터베이스의 테이블과 구조를 생성하는 데 사용했다면 Repository는 Entity가 생성한 데이터베이스에 접근하는 데 사용
+
+----
+
+## DAO와 DAOImpl
+
+- Data Access Object는 데이터베이스에 접근하기 위한 로직을 관리하기 위한 객체이다.
+- 비즈니스 로직의 동작 과정에서 데이터를 조작하는 기능은 DAO 객체가 수행한다.
+  - Spring Data JPA에서 DAO의 개념은 Repository가 대체한다.
+
+### DAO Interface 생성
+
+- interface로 ProductDAO 클래스를 생성하고 구현하고자하는 insert, select, update, delete 메서드 인터페이스 생성
+
+### DAO 구현체 생성
+
+- ProductDAOImpl 클래스를 생성하고 ProductDAO implements 해준다음 final 변수를 사용하여 ProductRepository 주입
+- `@Override` 를 통해 ProductDAO 클래스의 메서드들을 받아준다음 메서드 구현 시작
+
+#### `insertProduct()` 메서드
+
+```java
+@Override
+public Product insertProduct(Product product) {
+  Product savedProduct = productRepository.save(product);
+  return savedProduct;
+}
+```
+
+#### `selectProduct()` 메서드
+
+```java
+@Override
+public Product selectProduct(Long number) {
+    Product selectedProduct = productRepository.getById(number);
+    return selectedProduct;
+    }
+```
+
+#### `updateProductName()` 메서드
+
+```java
+@Override
+    public Product updateProductName(Long number, String name) throws Exception {
+        Optional<Product> seletedProduct = productRepository.findById(number);
+
+        Product updatedProduct;
+        if (seletedProduct.isPresent()){
+            Product product = seletedProduct.get();
+
+            product.setName(name);
+            product.setUpdateAt(LocalDateTime.now());
+            updatedProduct = productRepository.save(product);
+        }else {
+            throw new Exception();
+        }
+        return updatedProduct;
+    }
+```
+
+#### `deleteProduct()` 메서드
+
+```java
+@Override
+    public void deleteProduct(Long number) throws Exception {
+        Optional<Product> selectedProduct = productRepository.findById(number);
+
+        if(selectedProduct.isPresent()){
+            Product product = selectedProduct.get();
+
+            productRepository.delete(product);
+        }else {
+            throw new Exception();
+        }
+    }
+```
