@@ -271,3 +271,151 @@ public Product selectProduct(Long number) {
         }
     }
 ```
+
+----
+
+## Service Interface & Service Impl
+
+- Service Layer는 클라이언트가 요청한 데이터를 적절하게 가공해서 controller에 넘기는 역할을 한다.
+- `getProduct(Long number)`
+- `saveProduct(ProductDto productDto)`
+- `changeProductName(Long number, String name)`
+- `deleteProduct(Long number)` 와 같이 interface를 생성하고 ProductServiceImpl에서 구현체 정의
+
+### ProductServiceImpl
+
+#### getProduct
+
+```java
+@Override
+    public ProductResponseDto getProduct(Long number) {
+        Product product = productDAO.selectProduct(number);
+
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        productResponseDto.setNumber(product.getNumber());
+        productResponseDto.setName(product.getName());
+        productResponseDto.setPrice(product.getPrice());
+        productResponseDto.setStock(product.getStock());
+
+        return productResponseDto;
+    }
+```
+- DTO 객체와 Entity 객체가 공존하기 때문에 변환작업이 필요하다.
+  - DAO를 이용하여 number 값으로 가져온 데이터를 product에 할당
+  - product에서 get메서드로 값을 빼어 DTO 객체에 set메서드로 할당한다.
+
+#### saveProduct
+
+```java
+@Override
+    public ProductResponseDto saveProduct(ProductDto productDto) {
+        Product product = new Product();
+
+        product.setName(productDto.getName());
+        product.setPrice(productDto.getPrice());
+        product.setStock(productDto.getStock());
+        product.setCreateAt(LocalDateTime.now());
+        product.setUpdateAt(LocalDateTime.now());
+
+        Product savedProduct = productDAO.insertProduct(product);
+
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        productResponseDto.setNumber(savedProduct.getNumber());
+        productResponseDto.setName(savedProduct.getName());
+        productResponseDto.setPrice(savedProduct.getPrice());
+        productResponseDto.setStock(savedProduct.getStock());
+
+        return productResponseDto;
+    }
+```
+- Product Entity형을 가진 객체를 생성하고 DTO를 통해 저장할 객체를 Productdp gkfekd
+- Product에 할당 받은 데이터를 DAO의 insert 메서드를 통해 저장한다.
+
+#### changeProduct
+
+```java
+@Override
+    public ProductResponseDto changeProductName(Long number, String name) throws Exception {
+        Product chagedProduct = productDAO.updateProductName(number, name);
+
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        productResponseDto.setNumber(chagedProduct.getNumber());
+        productResponseDto.setName(chagedProduct.getName());
+        productResponseDto.setPrice(chagedProduct.getPrice());
+        productResponseDto.setStock(chagedProduct.getStock());
+
+        return productResponseDto;
+    }
+```
+- DTO를 통해 변경하고자 요청 받은 데이터를 Product 형을 가진 changeProduct에 할당과 동시에 number index에 해당하는 name을 변경
+- 변경항 값을 productResponseDto에 담아준 다음 반환
+
+#### deleteProduct
+
+```java
+@Override
+    public void deleteProduct(Long number) throws Exception {
+        productDAO.deleteProduct(number);
+    }
+```
+- Repository에서 제공하는 delete 메서드를 사용할 경우 리턴 받는 타입이 지정되어 있지 않기 때문에 void 사용
+
+----
+
+## Controller 생성
+
+### `GetMapping getProduct` 메서드
+
+```java
+@GetMapping()
+    public ResponseEntity<ProductResponseDto> getProduct(Long number){
+        ProductResponseDto productResponseDto = productService.getProduct(number);
+
+        return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
+    }
+```
+- `ResponseEntity` 로 요청을 DTO 형으로 받고 Service의 getProduct 메서드 호출
+- 반환 값은 성공시 `HttpStatus.OK` , body는 DTO를 담아서 전송
+
+### `PostMapping createProduct` 메서드
+
+```java
+@PostMapping()
+    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductDto productDto){
+        ProductResponseDto productResponseDto = productService.saveProduct(productDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
+    }
+```
+- ProductDto 형으로 Body를 통해 요청을 받고 productService의 `saveProduct` 메서드를 통해 product 생성
+- 반환 값으로 ProuductResponseDto 전달
+
+### `PutMapping chageProductName` 메서드
+
+```java
+@PutMapping()
+    public ResponseEntity<ProductResponseDto> changeProductName(@RequestBody ChangeProductNameDto changeProductNameDto) throws Exception{
+        ProductResponseDto productResponseDto = productService.changeProductName(changeProductNameDto.getNumber(), changeProductNameDto.getName());
+
+        return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
+    }
+```
+- `ChangeProductNameDto` 생성, 요청을 받은 다음
+- `productResponseDto`에 담을 때 productService의 `changeProductName` 메서드를 이용한다.
+  - 이때, 전달 하는 매개 변수인 number와 name은 요청받은 changePorductNameDto에서 꺼내어 사용
+
+### `DeleteMapping deleteProduct` 메서드
+
+```java
+@DeleteMapping()
+    public ResponseEntity<String> deleteProduct(Long number) throws Exception{
+        productService.deleteProduct(number);
+
+        return ResponseEntity.status(HttpStatus.OK).body("정상적으로 삭제되었습니다.");
+    }
+```
+- productService의 `deleteProduct`가 void 타입의 메서드 임으로 반환 값을 String으로 설정해준다.
+- 요청받은 number 값으로 삭제를 이관하여 데이터를 삭제한다.
+  - body에 메시지를 넣어 반환한다.
+
+----
