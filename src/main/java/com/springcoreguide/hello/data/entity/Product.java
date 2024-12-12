@@ -1,16 +1,21 @@
 package com.springcoreguide.hello.data.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+
 @Entity
+@Builder
 @Table(name = "product")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString(exclude = "name")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
