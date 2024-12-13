@@ -32,7 +32,6 @@ springdoc:
 
 logging:
   level:
-    root: info
     com.springcoreguide.hello.controller: info
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
