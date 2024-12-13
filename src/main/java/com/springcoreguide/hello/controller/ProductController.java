@@ -4,6 +4,7 @@ import com.springcoreguide.hello.dto.ChangeProductNameDto;
 import com.springcoreguide.hello.dto.ProductDto;
 import com.springcoreguide.hello.dto.ProductResponseDto;
 import com.springcoreguide.hello.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,18 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
     private final ProductService productService;
 
+    @Operation(
+            summary = "getProduct"
+    )
     @GetMapping()
     public ResponseEntity<ProductResponseDto> getProduct(Long number){
         ProductResponseDto productResponseDto = productService.getProduct(number);
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
     }
-
+    @Operation(
+            summary = "createProduct"
+    )
     @PostMapping()
     public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductDto productDto){
         ProductResponseDto productResponseDto = productService.saveProduct(productDto);
